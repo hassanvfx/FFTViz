@@ -29,5 +29,7 @@ class testApp : public ofBaseApp{
     ofImage image;
     ofImage freq;
     Mat magI;
-    ofVideoGrabber cam;	
+    ofVideoGrabber cam;
+    
+    Size_<int> cameraSize;
 };

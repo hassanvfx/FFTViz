@@ -6,15 +6,41 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
+    cameraSize.width=640;
+    cameraSize.height=480;
     
-    const char* filename =  "babel5.jpg";
+    ofSetVerticalSync(true);
+	cam.initGrabber(cameraSize.width,cameraSize.height);
+   
+   
+
+}
+
+//--------------------------------------------------------------
+void testApp::update(){
     
-//    Mat I = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
-//    if( I.empty())
-//        return -1;
+    cam.update();
+	if(!cam.isFrameNew()) {
+        return;
+    }
     
+//    const char* filename =  "babel5.jpg";
+//    
+//    //    Mat I = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
+//    //    if( I.empty())
+//    //        return -1;
+//    
+//    
+//    image.loadImage(filename);
     
-    image.loadImage(filename);
+//    image=cam;
+    
+    if(image.getWidth()){
+        image.allocate(cam.getWidth(), cam.getHeight(), OF_IMAGE_COLOR);
+    }
+    
+    image.setFromPixels(cam.getPixelsRef());
+    
     Mat  I = toCv(image);
     I.convertTo(I, CV_32F);
     cvtColor(I, I, CV_BGR2GRAY);
@@ -63,22 +89,17 @@ void testApp::setup(){
     normalize(magI, magI, 0, 1, CV_MINMAX); // Transform the matrix with float values into a
     // viewable image form (float between values 0 and 1).
     
-//    freq= ofImage();
+    //    freq= ofImage();
     freq.allocate(magI.rows, magI.cols  , OF_IMAGE_GRAYSCALE  );
-//    magI.convertTo(magI, CV_8U  );
+    //    magI.convertTo(magI, CV_8U  );
     printf("magI channels %d\n",magI.channels());
     
-//    toOf(I, image.getPixelsRef());
-//        toOf(magI, freq);
-//    drawMat(
+    //    toOf(I, image.getPixelsRef());
+    //        toOf(magI, freq);
+    //    drawMat(
     
-//    imshow("Input Image"       , I   );    // Show the result
-//    imshow("spectrum magnitude", magI);
-
-}
-
-//--------------------------------------------------------------
-void testApp::update(){
+    //    imshow("Input Image"       , I   );    // Show the result
+    //    imshow("spectrum magnitude", magI);
 
 }
 
@@ -88,8 +109,9 @@ void testApp::draw(){
 //    freq.draw(0, 0);
     
     
-    image.draw(0, 0,320,320);
-    drawMat(magI,0.0,320,320,320);
+   
+    drawMat(magI,0,0,cameraSize.width,cameraSize.height);
+    image.draw(cameraSize.width,0, cameraSize.width/2,cameraSize.height/2);
 }
 
 //--------------------------------------------------------------
